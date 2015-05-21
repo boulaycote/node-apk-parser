@@ -5,7 +5,7 @@ describe("APK New", function () {
     var output = null;
 
     before(function (done) {
-        parseApk(__dirname + "/samples/test_new.apk", function (err, out) {
+        parseApk("/Users/max/Downloads/com.instagram.android-6.21.2-APK4Fun.com.apk", 1024 * 1024 * 5, function (err, out) {
             if (err) {
                 return done(err);
             }
@@ -23,7 +23,7 @@ describe("APK New", function () {
     });
 
     it("Has a package name", function () {
-        assert.equal(output.manifest[0]["@package"], "org.rubenv.testapk");
+        assert.equal(output.manifest[0]["@package"], "com.instagram.android");
     });
 
     it("Has a package version", function () {
