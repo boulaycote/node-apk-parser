@@ -10,38 +10,28 @@ try {
     fs.mkdirSync(targetDir);
 }
 
-var platform = null;
-if (os.type() === "Darwin") {
-    platform = "macosx";
-} else if (os.type() === "Linux") {
-    platform = "linux";
-} else {
-    throw new Error("Unknown OS!");
-}
-
-function attemptDownload(attemptsLeft) {
+function attemptDownload(attemptsLeft, platform) {
     var url = "http://dl-ssl.google.com/android/repository/platform-tools_r16-" + platform + ".zip";
-    var tempFile = "/tmp/platform-tools-" + (new Date().getTime()) + ".zip";
-
+    var tempFile = "/tmp/platform-tools-" + (new Date().getTime()) + platform + ".zip";
+    var dir = "tools/aapt-" + platform;
     var file = fs.createWriteStream(tempFile);
     var request = http.get(url, function (response) {
         response.pipe(file);
         response.on("end", function () {
-            exec("unzip -j -o " + tempFile + " platform-tools/aapt -d tools/", function (err) {
+            exec("unzip -j -o " + tempFile + " platform-tools/aapt -d " + dir, function (err) {
                 if (err) {
                     if (attemptsLeft === 0) {
                         throw err;
                     } else {
-                        attemptDownload(attemptsLeft - 1);
-                        return;
+                        return attemptDownload(attemptsLeft - 1, platform);
                     }
                 }
-                fs.chmodSync("tools/aapt", "755");
+                fs.chmodSync(dir + "/aapt", "755");
                 fs.unlinkSync(tempFile);
-                process.exit();
             });
         });
     });
 }
 
-attemptDownload(3);
+attemptDownload(3, "linux");
+attemptDownload(3, "macosx");

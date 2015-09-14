@@ -5,7 +5,7 @@ describe("APK New", function () {
     var output = null;
 
     before(function (done) {
-        parseApk("/Users/max/Downloads/com.instagram.android-6.21.2-APK4Fun.com.apk", 1024 * 1024 * 5, function (err, out) {
+        parseApk(__dirname + "/samples/test_new.apk", 1024 * 1024 * 5, function (err, out) {
             if (err) {
                 return done(err);
             }
