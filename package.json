@@ -27,7 +27,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "install": "node install.js"
+    "postinstall": "node install.js"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
