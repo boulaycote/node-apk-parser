@@ -34,4 +34,14 @@ describe("APK Complex", function () {
         var manifest = output.manifest[0];
         assert.equal(manifest.application.length, 1);
     });
+
+    it("Has a label", function () {
+        var manifest = output.manifest[0];
+        assert.equal(manifest.application[0]["@android:label"], "app_name");
+    });
+
+    it("Has an icon", function () {
+        var manifest = output.manifest[0];
+        assert.equal(manifest.application[0]["@android:icon"], "app_icon");
+    });
 });

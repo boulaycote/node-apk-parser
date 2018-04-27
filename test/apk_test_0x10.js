@@ -34,4 +34,14 @@ describe("APK 0x10 not raw type", function () {
         var manifest = output.manifest[0];
         assert.equal(manifest.application.length, 1);
     });
+
+    it("Has a label", function () {
+        var manifest = output.manifest[0];
+        assert.equal(manifest.application[0]["@android:label"], "Android System WebView");
+    });
+
+    it("Has an icon", function () {
+        var manifest = output.manifest[0];
+        assert.equal(manifest.application[0]["@android:icon"], "icon_webview");
+    });
 });

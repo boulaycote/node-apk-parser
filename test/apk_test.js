@@ -30,4 +30,9 @@ describe("APK", function () {
         var manifest = output.manifest[0];
         assert.equal(manifest.application.length, 1);
     });
+
+    it("Has a label", function () {
+        var manifest = output.manifest[0];
+        assert.equal(manifest.application[0]["@android:label"], "Snake on a Phone");
+    });
 });
