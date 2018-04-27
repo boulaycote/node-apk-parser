@@ -1,7 +1,9 @@
 var http = require("http");
 var fs = require("fs");
 var os = require("os");
+var path = require("path");
 var exec = require("child_process").exec;
+var decompress = require("decompress");
 
 var targetDir = __dirname + "/tools/";
 try {
@@ -18,16 +20,19 @@ function attemptDownload(attemptsLeft, platform) {
     var request = http.get(url, function (response) {
         response.pipe(file);
         response.on("end", function () {
-            exec("unzip -j -o " + tempFile + " platform-tools/aapt -d " + dir, function (err) {
-                if (err) {
-                    if (attemptsLeft === 0) {
-                        throw err;
-                    } else {
-                        return attemptDownload(attemptsLeft - 1, platform);
-                    }
-                }
+            decompress(tempFile, dir, {
+                filter: function (file) { return path.basename(file.path) === "aapt"; },
+                map: function (file) { file.path = path.basename(file.path); return file; }
+            }).then(function (files) {
                 fs.chmodSync(dir + "/aapt", "755");
                 fs.unlinkSync(tempFile);
+            }).catch(function (err) {
+                console.error(err);
+                if (attemptsLeft === 0) {
+                    throw err;
+                } else {
+                    return attemptDownload(attemptsLeft - 1, platform);
+                }
             });
         });
     });
